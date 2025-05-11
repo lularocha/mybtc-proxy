@@ -38,14 +38,14 @@ async function fetchBinancePrice(symbol) {
 
 async function fetchEarliestBitcoinPrice() {
   try {
-    const response = await axios.get('https://api3.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=0&limit=1', {
+    const response = await axios.get('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=0&limit=1', {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0.4472.124'
       }
     });
     return response.data.length > 0 ? { price: parseFloat(response.data[0][4]), timestamp: response.data[0][0] } : null;
   } catch (error) {
-    console.error('Error fetching earliest price:', error.message);
+    console.error('Error fetching earliest price:', error.message, error.response ? error.response.data : '');
     throw error;
   }
 }
@@ -53,14 +53,14 @@ async function fetchEarliestBitcoinPrice() {
 async function fetchHistoricalBitcoinPrice(period, pastTimestamp) {
   const interval = ['1D', '1W', '1M'].includes(period) ? '1h' : '1d';
   try {
-    const response = await axios.get(`https://api3.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&endTime=${pastTimestamp}&limit=1`, {
+    const response = await axios.get(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&endTime=${pastTimestamp}&limit=1`, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0.4472.124'
       }
     });
     return response.data.length > 0 ? parseFloat(response.data[0][4]) : null;
   } catch (error) {
-    console.error(`Error fetching historical price for ${period}:`, error.message);
+    console.error(`Error fetching historical price for ${period}:`, error.message, error.response ? error.response.data : '');
     throw error;
   }
 }
